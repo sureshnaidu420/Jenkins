@@ -1,0 +1,17 @@
+#!/bin/bash
+
+whoami
+sudo apt update 
+sudo apt install git -y
+rm -rf *
+git clone https://github.com/krishnansai/docker-test.git
+cp -r ./docker-test/* .
+sudo apt install docker.io
+sudo docker build . -t 851725253728.dkr.ecr.us-east-1.amazonaws.com/docker-test
+aws ecr get-login-password --region eu-central-1 | sudo docker login --username AWS --password-stdin 851725253728.dkr.ecr.us-east-1.amazonaws.com/docker-test
+sudo docker push 851725253728.dkr.ecr.us-east-1.amazonaws.com/docker-test
+sudo docker pull 851725253728.dkr.ecr.us-east-1.amazonaws.com/docker-test
+sudo docker run -d httpd
+sudo docker stop $(sudo docker ps)
+sudo docker rm $(sudo docker ps -a)
+sudo docker run -d -p 80:80 851725253728.dkr.ecr.us-east-1.amazonaws.com/docker-test
